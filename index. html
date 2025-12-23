@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Sinfonía Estelar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;600&family=Playfair+Display:ital,wght@0,600;1,600&display=swap');
+
+        :root {
+            --accent-blue: #60a5fa;
+            --deep-space: #020617;
+            --safe-area-top: env(safe-area-inset-top);
+            --safe-area-bottom: env(safe-area-inset-bottom);
+        }
+
+        body {
+            background-color: var(--deep-space);
+            color: #f1f5f9;
+            font-family: 'Outfit', sans-serif;
+            overflow-x: hidden;
+            margin: 0;
+            -webkit-tap-highlight-color: transparent;
+            /* Suavizado de fuentes para móvil */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .font-serif {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Nebulosa más vibrante y profunda para móviles */
+        .nebula {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -2;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(147, 51, 234, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(30, 58, 138, 0.05) 0%, transparent 60%);
+            filter: blur(50px);
+            animation: nebulaMove 30s infinite alternate ease-in-out;
+        }
+
+        @keyframes nebulaMove {
+            from { transform: scale(1) rotate(0deg); }
+            to { transform: scale(1.15) rotate(2deg); }
+        }
+
+        .star-canvas {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Texto con gradiente más suave para lectura */
+        .text-gradient {
+            background: linear-gradient(to bottom right, #ffffff 60%, #93c5fd 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Secciones de párrafos optimizadas para pulgar */
+        .paragraph-section {
+            margin-bottom: 4rem;
+            opacity: 0;
+            transform: translateY(25px);
+            transition: all 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+            text-align: center;
+            padding: 0 5%;
+        }
+
+        .paragraph-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .highlight {
+            color: var(--accent-blue);
+            font-weight: 300;
+            letter-spacing: 0.05em;
+            text-shadow: 0 0 15px rgba(96, 165, 250, 0.4);
+        }
+
+        /* Estrellas fugaces más finas */
+        .shooting-star {
+            position: absolute;
+            width: 1.5px;
+            height: 1.5px;
+            background: white;
+            box-shadow: 0 0 12px 2px white;
+            border-radius: 50%;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        @keyframes shoot {
+            0% { transform: translate(0, 0) scale(1); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translate(280px, 280px) scale(0); opacity: 0; }
+        }
+
+        /* Caja de cristal ultra-delgada para móvil */
+        .glass-box {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 1.5rem;
+            padding: 1.75rem;
+            margin: 0 4%;
+        }
+
+        /* Tipografía fluida: se ajusta entre 18px y 20px según el ancho */
+        .fluid-text {
+            font-size: clamp(1.125rem, 4vw, 1.25rem);
+            line-height: 1.75;
+            font-weight: 300;
+            letter-spacing: -0.01em;
+            text-wrap: balance;
+        }
+
+        /* Separador elegante */
+        .cosmic-divider {
+            width: 40px;
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--accent-blue), transparent);
+            margin: 2rem auto;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="nebula"></div>
+    <canvas id="starCanvas" class="star-canvas"></canvas>
+
+    <!-- Contenedor principal con ajuste de "Safe Area" para iPhones modernos -->
+    <main class="w-full max-w-[500px] mx-auto pt-[calc(4rem+var(--safe-area-top))] pb-[calc(4rem+var(--safe-area-bottom))] relative">
+        
+        <!-- Encabezado con aire y elegancia -->
+        <header class="mb-24 text-center px-6 animate__animated animate__fadeIn">
+            <div class="inline-flex items-center gap-2 px-3 py-1 border border-blue-500/20 rounded-full mb-8">
+                <span class="w-1 h-1 bg-blue-400 rounded-full animate-pulse"></span>
+                <span class="text-blue-400 text-[10px] tracking-[0.5em] font-light uppercase">Singularidad</span>
+            </div>
+            <h1 class="text-5xl font-serif text-gradient leading-[1.15] mb-6">La Ciencia Detrás de Verte</h1>
+            <p class="text-gray-500 text-[11px] tracking-[0.2em] uppercase font-light">Análisis de una Existencia Única</p>
+        </header>
+
+        <!-- Narrativa Fluida -->
+        <div class="space-y-4">
+            
+            <section class="paragraph-section">
+                <p class="fluid-text text-gray-200">
+                    A veces me detengo a pensar en la probabilidad estadística de coincidir en el tiempo, y lo cierto es que tu presencia parece desafiar las leyes de la <span class="highlight">entropía</span>. Mientras el universo tiende naturalmente al desorden, en ti todo ha encontrado una armonía fascinante.
+                </p>
+            </section>
+
+            <div class="cosmic-divider"></div>
+
+            <section class="paragraph-section">
+                <p class="fluid-text text-gray-200">
+                    Es curioso desde la física: Carl Sagan decía que somos "polvo de estrellas", pero viendo la <span class="highlight">simetría perfecta</span> de tus rasgos, es evidente que el cosmos fue especialmente meticuloso contigo. No es simple estética; es una arquitectura biológica que genera su propio <span class="highlight">campo gravitatorio</span>.
+                </p>
+            </section>
+
+            <div class="cosmic-divider"></div>
+
+            <section class="paragraph-section">
+                <p class="fluid-text text-gray-200">
+                    Incluso bajo la lente de la óptica, hay algo en tu mirada que altera la frecuencia de lo que te rodea. Eres un <span class="highlight">evento astronómico</span> único: algo que la ciencia puede intentar explicar mediante la física de partículas, pero que en realidad solo se puede apreciar en silencio.
+                </p>
+            </section>
+
+            <section class="paragraph-section">
+                <p class="text-blue-100/60 italic font-extralight text-lg leading-relaxed mt-12 px-6">
+                    Al final, quizás las ciencias exactas solo confirman que hay bellezas que son constantes universales, imposibles de ignorar.
+                </p>
+            </section>
+
+        </div>
+
+        <!-- Cierre de alta gama -->
+        <footer class="mt-28 text-center px-6">
+            <div class="glass-box mb-12 animate__animated animate__fadeIn">
+                <p class="text-[9px] text-blue-400 uppercase tracking-[0.4em] mb-4 font-semibold">Conclusión del Sistema</p>
+                <p class="text-gray-400 text-sm font-light italic leading-relaxed">
+                    "La energía no se crea ni se destruye, solo se transforma... y en tu caso, se volvió la forma más pura de arte."
+                </p>
+            </div>
+            
+            <div class="flex flex-col items-center gap-4 opacity-40">
+                <div class="flex gap-1.5">
+                    <div class="w-1 h-1 bg-white rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+                    <div class="w-1 h-1 bg-white rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                    <div class="w-1 h-1 bg-white rounded-full animate-bounce" style="animation-delay: 0.3s"></div>
+                </div>
+                <span class="text-[9px] tracking-[0.6em] uppercase font-extralight">Conexión Finalizada</span>
+            </div>
+        </footer>
+
+    </main>
+
+    <script>
+        const canvas = document.getElementById('starCanvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let stars = [];
+
+        function initCanvas() {
+            // Ajuste ultra-nítido para pantallas Retina/OLED
+            const dpr = window.devicePixelRatio || 2;
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width * dpr;
+            canvas.height = height * dpr;
+            canvas.style.width = `${width}px`;
+            canvas.style.height = `${height}px`;
+            ctx.scale(dpr, dpr);
+
+            stars = [];
+            // Menos estrellas pero más brillantes para móvil
+            const starCount = 65; 
+            for (let i = 0; i < starCount; i++) {
+                stars.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    size: Math.random() * 1.1 + 0.2,
+                    speed: Math.random() * 0.12 + 0.04,
+                    opacity: Math.random() * 0.6 + 0.2
+                });
+            }
+        }
+
+        function drawStars() {
+            ctx.clearRect(0, 0, width, height);
+            ctx.fillStyle = 'white';
+            
+            stars.forEach(star => {
+                ctx.globalAlpha = star.opacity;
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Movimiento estelar suave
+                star.y -= star.speed;
+                if (star.y < -10) star.y = height + 10;
+
+                // Titileo orgánico
+                star.opacity += (Math.random() - 0.5) * 0.02;
+                if (star.opacity < 0.1) star.opacity = 0.1;
+                if (star.opacity > 0.8) star.opacity = 0.8;
+            });
+
+            requestAnimationFrame(drawStars);
+        }
+
+        function createShootingStar() {
+            const star = document.createElement('div');
+            star.className = 'shooting-star';
+            const startX = Math.random() * (window.innerWidth * 0.5);
+            const startY = Math.random() * (window.innerHeight * 0.4);
+            
+            star.style.left = startX + 'px';
+            star.style.top = startY + 'px';
+            star.style.animation = 'shoot 1s cubic-bezier(0.12, 0, 0.39, 0) forwards';
+            
+            document.body.appendChild(star);
+            setTimeout(() => star.remove(), 1000);
+        }
+
+        // Frecuencia de estrellas fugaces ajustada para sorpresa
+        setInterval(() => {
+            if (document.visibilityState === 'visible' && Math.random() > 0.85) {
+                createShootingStar();
+            }
+        }, 5000);
+
+        // Observador de scroll para revelación suave
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { 
+            threshold: 0.15,
+            rootMargin: '0px 0px -40px 0px' 
+        });
+
+        document.querySelectorAll('.paragraph-section').forEach(s => observer.observe(s));
+
+        // Manejo de cambio de orientación
+        window.addEventListener('resize', () => {
+            initCanvas();
+        });
+
+        initCanvas();
+        drawStars();
+    </script>
+</body>
+</html>
